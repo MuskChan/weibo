@@ -177,3 +177,10 @@ input {
     max-width: 100px;
   }
 }
+
+#logout {
+  cursor: default;
+  &:hover {
+    background-color: transparent;
+  }
+}
