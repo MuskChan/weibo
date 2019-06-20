@@ -91,7 +91,7 @@ class UsersController extends Controller
         session()->flash('success', '成功删除用户！');
         return back();
     }
-
+/*
     protected function sendEmailConfirmationTo($user)
     {
         $view = 'emails.confirm';
@@ -104,8 +104,20 @@ class UsersController extends Controller
         Mail::send($view, $data, function ($message) use ($from, $name, $to, $subject) {
             $message->from($from, $name)->to($to)->subject($subject);
         });
+    }*/
+
+    protected function sendEmailConfirmationTo($user)
+    {
+        $view = 'emails.confirm';
+        $data = compact('user');
+        $to = $user->email;
+        $subject = "感谢注册 Sample 应用！请确认你的邮箱。";
+
+        Mail::send($view, $data, function ($message) use ($to, $subject) {
+            $message->to($to)->subject($subject);
+        });
     }
-    
+
     public function confirmEmail($token)
     {
         $user = User::where('activation_token', $token)->firstOrFail();
