@@ -12,6 +12,7 @@ class UsersController extends Controller
     //中间件过滤  除了此处指定的动作以外，所有其他动作都必须登录用户才能访问
     public function __construct()
     {
+        // Auth 中间件黑名单
         $this->middleware('auth', [            
             'except' => ['show', 'create', 'store','index']
         ]);
@@ -19,7 +20,7 @@ class UsersController extends Controller
             'only' => ['create']
         ]);
     }
-    
+
     public function index()
     {
         $users = User::paginate(10);
@@ -57,6 +58,7 @@ class UsersController extends Controller
 
     public function edit(User $user)
     {
+        //授权策略
         $this->authorize('update', $user);
         return view('users.edit', compact('user'));
     }
@@ -79,5 +81,13 @@ class UsersController extends Controller
         session()->flash('success', '个人资料更新成功！');
 
         return redirect()->route('users.show', $user->id);
+    }
+
+    public function destroy(User $user)
+    {
+        $this->authorize('destroy', $user);
+        $user->delete();
+        session()->flash('success', '成功删除用户！');
+        return back();
     }
 }
